@@ -58,10 +58,7 @@ def _python_list_depending_files(path: pathlib.Path, basedir: pathlib.Path) -> L
     try:
         executor = concurrent.futures.ThreadPoolExecutor()
         future = executor.submit(importlab.graph.ImportGraph.create, env, [str(path)])
-        if platform.uname().system == 'Windows':
-            timeout = 5.0  # 1.0 sec causes timeout on CI using Windows
-        else:
-            timeout = 1.0
+        timeout = 30.0
         res_graph = future.result(timeout=timeout)
     except concurrent.futures.TimeoutError as e:
         raise RuntimeError(f"Failed to analyze the dependency graph (timeout): {path}") from e
